@@ -1,0 +1,343 @@
+openapi: 3.0.0
+info:
+  title: Dentist Reservation API
+  description: API for making dentist reservations
+  contact:
+    email: AA4598@student.jamk.fi
+  version: 1.0.0
+servers:
+- url: /
+tags:
+- name: reservation
+  description: Reservation endpoints
+paths:
+  /reservations:
+    get:
+      tags:
+      - reservation
+      summary: Get all reservations
+      operationId: reservationsGET
+      responses:
+        "200":
+          description: Successful operation. List of reservations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+                x-content-type: application/json
+        "400":
+          description: Invalid operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                message: Invalid operation
+      x-swagger-router-controller: Reservation
+    post:
+      tags:
+      - reservation
+      summary: Add a new reservation
+      operationId: reservationsPOST
+      requestBody:
+        $ref: '#/components/requestBodies/Reservation'
+      responses:
+        "200":
+          description: Reservation created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                message: Reservation created successfully
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                message: Bad request
+      x-swagger-router-controller: Reservation
+  /reservations/{reservationId}:
+    get:
+      tags:
+      - reservation
+      summary: Find and return a reservation by reservationId
+      operationId: reservationsReservationIdGET
+      parameters:
+      - name: reservationId
+        in: path
+        description: Reservation identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        "400":
+          description: Invalid ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                message: Invalid ID
+      x-swagger-router-controller: Reservation
+    put:
+      tags:
+      - reservation
+      summary: Update a reservation by reservationId
+      operationId: reservationsReservationIdPUT
+      parameters:
+      - name: reservationId
+        in: path
+        description: Reservation identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/Reservation'
+      responses:
+        "200":
+          description: Reservation updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                message: Successful operation
+        "400":
+          description: Invalid ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                message: Invalid ID
+      x-swagger-router-controller: Reservation
+    delete:
+      tags:
+      - reservation
+      summary: Deletes a reservation
+      operationId: reservationsReservationIdDELETE
+      parameters:
+      - name: reservationId
+        in: path
+        description: Reservation identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                message: Successful operation
+        "400":
+          description: Invalid ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                message: Invalid ID
+      x-swagger-router-controller: Reservation
+    patch:
+      tags:
+      - reservation
+      summary: Partially update a reservation
+      operationId: reservationsReservationIdPATCH
+      parameters:
+      - name: reservationId
+        in: path
+        description: Reservation identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/Reservation'
+      responses:
+        "200":
+          description: Reservation updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                message: Successful operation
+        "400":
+          description: Invalid ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                message: Invalid ID
+      x-swagger-router-controller: Reservation
+  /reservations/query:
+    get:
+      tags:
+      - reservation
+      summary: Get reservations by searhing query
+      description: You can insert just the parameters is needed for the query
+      operationId: reservationsQueryGET
+      parameters:
+      - name: service
+        in: query
+        description: Query by the service
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: customerName
+        in: query
+        description: Query by the customer's name
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: startTime
+        in: query
+        description: Query by start time
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      - name: endTime
+        in: query
+        description: Query by end time
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      responses:
+        "200":
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        "400":
+          description: Invalid operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                message: Invalid operation
+      x-swagger-router-controller: Reservation
+components:
+  schemas:
+    Reservation:
+      type: object
+      properties:
+        customerName:
+          type: string
+          example: Timo Laakkonen
+        date:
+          type: string
+          format: date-time
+          example: 2023-11-14T19:09:00Z
+        service:
+          type: string
+          example: Tooth filling
+        reservationId:
+          type: string
+          description: system will generate id (uuid)
+          example: e8f9c2b2-8a3d-4d7f-ba6d-4dab7c1cfe4d
+      example:
+        date: 2023-11-14T19:09:00Z
+        reservationId: e8f9c2b2-8a3d-4d7f-ba6d-4dab7c1cfe4d
+        service: Tooth filling
+        customerName: Timo Laakkonen
+    inline_response_400:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: message
+  parameters:
+    ReservationId:
+      name: reservationId
+      in: path
+      description: Reservation identifier
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    Service:
+      name: service
+      in: query
+      description: Query by the service
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+    CustomerName:
+      name: customerName
+      in: query
+      description: Query by the customer's name
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+    StartTime:
+      name: startTime
+      in: query
+      description: Query by start time
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+        format: date-time
+    EndTime:
+      name: endTime
+      in: query
+      description: Query by end time
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+        format: date-time
+  requestBodies:
+    Reservation:
+      description: New reservation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Reservation'
+          example:
+            customerName: Timo Laakkonen
+            date: 2023-12-01T14:30:00+00:00
+            service: Teeth Cleaning
+      required: true

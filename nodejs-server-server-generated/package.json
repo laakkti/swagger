@@ -1,0 +1,23 @@
+{
+  "name": "dentist-reservation-api",
+  "version": "1.0.0",
+  "description": "API for making dentist reservations",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "swagger"
+  ],
+  "license": "Unlicense",
+  "private": true,
+  "dependencies": {
+    "connect": "^3.2.0",
+    "js-yaml": "^3.3.0",
+    "nodemon": "^3.0.1",
+    "oas3-tools": "^2.2.3",
+    "uuid": "^9.0.1"
+  }
+}

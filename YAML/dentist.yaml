@@ -1,0 +1,308 @@
+openapi: 3.0.0
+info:
+  title: Dentist Reservation API
+  description: API for making dentist reservations
+  version: 1.0.0
+  contact:
+    email: AA4598@student.jamk.fi
+
+tags:
+  - name: reservation
+    description: Reservation endpoints
+
+paths:
+  /reservations:
+
+    post:
+      tags:
+        - reservation
+      summary: Add a new reservation
+
+      requestBody:
+        $ref: "#/components/requestBodies/Reservation"
+      responses:
+        200:
+          description: Reservation created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Reservation created successfully
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Bad request
+    get:
+      tags:
+        - reservation
+      summary: Get all reservations
+      responses:
+        200:
+          description: Successful operation. List of reservations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Reservation"
+
+        400:
+          description: Invalid operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Invalid operation
+
+  /reservations/{reservationId}:
+    delete:
+      tags:
+        - reservation
+      summary: Deletes a reservation
+      parameters:
+        - $ref: "#/components/parameters/ReservationId"
+      
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Successful operation
+
+        400:
+          description: Invalid ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Invalid ID
+    get:
+      tags:
+        - reservation
+      summary: Find and return a reservation by reservationId
+      parameters:
+        - $ref: "#/components/parameters/ReservationId"
+
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        400:
+          description: Invalid ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Invalid ID
+
+    put:
+      tags:
+        - reservation
+      summary: Update a reservation by reservationId
+      parameters:
+        - $ref: "#/components/parameters/ReservationId"
+
+      requestBody:
+        $ref: "#/components/requestBodies/Reservation"
+      responses:        
+        200:
+          description: Reservation updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Successful operation
+
+        400:
+          description: Invalid ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Invalid ID
+
+    patch:
+      tags:
+        - reservation
+      summary: Partially update a reservation 
+      parameters:
+        - $ref: "#/components/parameters/ReservationId"
+
+      requestBody:
+        $ref: "#/components/requestBodies/Reservation"
+
+      responses:
+        200:
+          description: Reservation updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Successful operation
+
+        400:
+          description: Invalid ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Invalid ID
+
+  /reservations/query:
+    get:
+      tags:
+        - reservation
+      summary: Get reservations by searhing query
+      description: "You can insert just the parameters is needed for the query"
+      parameters:
+        - $ref: "#/components/parameters/Service"
+        - $ref: "#/components/parameters/CustomerName"
+        - $ref: "#/components/parameters/StartTime"
+        - $ref: "#/components/parameters/EndTime"
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                #$ref: "#/components/schemas/ReservationArray"
+                type: array
+                items:
+                $ref: "#/components/schemas/Reservation"
+
+        400:
+          description: Invalid operation          
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Invalid operation       
+
+components:
+  schemas:
+    Reservation:
+      type: object
+      properties:
+        customerName:
+          type: string
+          example: Timo Laakkonen
+        date:
+          type: string
+          format: date-time
+          example: "2023-11-14T19:09:00+00:00"
+        service:
+          type: string
+          example: "Tooth filling"
+        reservationId:
+          type: string
+          example: "e8f9c2b2-8a3d-4d7f-ba6d-4dab7c1cfe4d"
+          description: "system will generate id (uuid)"
+
+  parameters:
+    # made in POST request for new reservation
+    ReservationId:
+      name: reservationId
+      in: path
+      description: Reservation identifier
+      required: true
+      schema:
+        type: string
+
+    Service:
+      name: service
+      in: query
+      description: Query by the service
+      required: false
+      schema:
+        type: string
+
+    CustomerName:
+      name: customerName
+      in: query
+      description: Query by the customer's name 
+      required: false
+      schema:
+        type: string
+
+    StartTime:
+      name: startTime
+      in: query
+      description: Query by start time 
+      required: false
+      schema:
+        type: string
+        format: date-time
+
+    EndTime:
+      name: endTime
+      in: query
+      description: Query by end time
+      required: false
+      schema:
+        type: string
+        format: date-time
+
+  requestBodies:
+    Reservation:
+      description: New reservation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Reservation"
+          example:
+            customerName: "Timo Laakkonen"
+            date: "2023-12-01T14:30:00+00:00"
+            service: "Teeth Cleaning"
+      required: true
